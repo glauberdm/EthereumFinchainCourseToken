@@ -8,4 +8,4 @@
 ## Rodando Wallet web app
 `../EthereumFinchainCourseToken$ npm run dev`
 
-Abrir o endereço [http://localhost:3001] em um browser com MetaMask conectado na rede Ropsten.
+Abrir o endereço http://localhost:3001 em um browser com MetaMask conectado na rede Ropsten.
