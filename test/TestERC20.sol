@@ -4,14 +4,14 @@ import "truffle/Assert.sol";
 import "truffle/DeployedAddresses.sol";
 import "../contracts/EthereumFinchainCourse.sol";
 
-contract TestERC20 { 
+contract TestERC20 {
 
   function testInitialBalanceUsingDeployedContract() public {
     EthereumFinchainCourse token = EthereumFinchainCourse(DeployedAddresses.EthereumFinchainCourse());
 
     uint expected = 1000000000000;
 
-    Assert.equal(token.balanceOf(tx.origin), expected, "Owner has 1000000000000 ETHFC");
+    Assert.equal(token.balanceOf(msg.sender), expected, "Owner has 1000000000000 ETHFC");
   }
 
   function testTotalSupply() public {

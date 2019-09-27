@@ -1,6 +1,6 @@
-var expect = require('chai').expect
-
-var Token = artifacts.require('./EthereumFinchainCourse.sol')
+const expect = require('chai').expect
+const truffleAssert = require('truffle-assertions');
+const Token = artifacts.require('./EthereumFinchainCourse.sol')
 
 contract('Ethereum Finchain Course', (accounts) => {
 
@@ -25,8 +25,6 @@ contract('Ethereum Finchain Course', (accounts) => {
             expect(await token.balanceOf(owner)).to.be.ok
             expect(await token.balanceOf(emptyAddress)).to.be.ok
             expect(await token.allowance(owner, emptyAddress)).to.be.ok
-            expect(await token.Transfer(owner, emptyAddress, 0)).to.be.ok
-            expect(await token.Approval(owner, emptyAddress, 0)).to.be.ok
         });
 
         it('Token satisfies ERC-20 characteristics.', async () => {
@@ -56,23 +54,42 @@ contract('Ethereum Finchain Course', (accounts) => {
             expect(transfer, 'Token can transfer').to.be.a('object')
             expect(/0x[\d\W\w].*/.test(transfer.tx), 'Has transfer transaction')
 
-            token
-                .Transfer({
-                    to: to,
-                    value: amount
-                }, {
-                    fromBlock: 0,
-                    toBlock: 'latest'
-                })
-                .get(
-                    (error, response) => {
-                        response = response[0]
-                        expect(response.event, 'Has Transfer event').to.equal('Transfer')
-                        expect(response.args.from).to.be.equal(owner)
-                        expect(response.args.to).to.be.equal(to)
-                        expect(Number(response.args.value)).to.be.equal(amount)
-                    }
-                )
+            // Para ver os eventos durante o teste
+            // truffle test --show-events
+
+            // Truffle 4
+            // token
+            //     .Transfer({
+            //         to: to,
+            //         value: amount
+            //     }, {
+            //         fromBlock: 0,
+            //         toBlock: 'latest'
+            //     })
+            //     .get(
+            //         (error, response) => {
+            //             response = response[0]
+            //             expect(response.event, 'Has Transfer event').to.equal('Transfer')
+            //             expect(response.args.from).to.be.equal(owner)
+            //             expect(response.args.to).to.be.equal(to)
+            //             expect(Number(response.args.value)).to.be.equal(amount)
+            //         }
+            //     )
+
+            //Truffle 5
+            const eventLog = transfer.receipt.logs[0]
+            expect(eventLog.event, 'Has Transfer event').to.equal('Transfer')
+            expect(eventLog.args.from).to.be.equal(owner)
+            expect(eventLog.args.to).to.be.equal(to)
+            expect(Number(eventLog.args.value)).to.be.equal(amount)
+
+            // OR
+
+            truffleAssert.eventEmitted(transfer, 'Transfer', (ev) => {
+                return ev.from === owner
+                    && ev.to === to
+                    && Number(ev.value) === amount
+            });
 
             expect(Number(await token.balanceOf(owner))).to.equal(initialBalanceOwner - amount)
             expect(Number(await token.balanceOf(to))).to.equal(initialBalanceTo + amount)
@@ -86,7 +103,11 @@ contract('Ethereum Finchain Course', (accounts) => {
             try {
                 await token.transferFrom(to, amount)
             } catch (error) {
-                expect(error.message).to.equal('Invalid number of arguments to Solidity function')
+                //Truffle 4
+                // expect(error.message).to.equal('Invalid number of arguments to Solidity function')
+
+                //Truffle 5
+                expect(error.message).to.equal('Invalid number of parameters for "transferFrom". Got 2 expected 3!')
             }
         });
     })
