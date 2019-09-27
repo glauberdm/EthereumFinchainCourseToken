@@ -8,6 +8,9 @@ App = {
 
     initWeb3: () => {
         if (typeof web3 !== 'undefined') {
+            if(window.ethereum) {
+                ethereum.enable().then();
+            }
             App.web3Provider = web3.currentProvider;
             web3 = new Web3(web3.currentProvider);
         } else {
