@@ -1,8 +1,11 @@
 # Ethereum Finchain Course - ERC-20 Token Standard and Wallet
 
-## Projeto NodeJS e Truffle
+### Dependências
 
-### Start DApp
+* [NodeJS](https://nodejs.org/en/ homenagem do nodejs)
+* [Truffle](https://www.trufflesuite.com)
+
+### Start Dapp
 No console, no diretório do projeto:
 
 #### Instalando dependências
