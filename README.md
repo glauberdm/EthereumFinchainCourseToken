@@ -2,7 +2,7 @@
 
 ### Dependências
 
-* [NodeJS](https://nodejs.org/en/ homenagem do nodejs)
+* [NodeJS](https://nodejs.org/en/)
 * [Truffle](https://www.trufflesuite.com)
 
 ### Start Dapp
